@@ -1,0 +1,48 @@
+# LAB-05 Pre-Workshop — Software Architecture & HLD
+
+## 1) เป้าหมาย
+อธิบายสถาปัตยกรรมโดยรวมของระบบ และเตรียมรายการองค์ประกอบหลักที่จะพัฒนา
+
+## 2) ขอบเขตระบบ (Scope)
+- ผู้ใช้หลัก/Actor:
+- ฟีเจอร์ที่ครอบคลุมในสัปดาห์นี้:
+
+## 3) เทคโนโลยี
+- Frontend: React (Vite 5173)
+- Backend: Node.js + Express (พอร์ต 3001), CORS, Helmet, Joi
+- Tools: VS Code, diagrams.net (draw.io), Postman/Thunder
+
+## 4) High-Level Architecture
+![Architecture](diagrams/architecture.png)
+
+สรุปการสื่อสาร:
+- Frontend → Backend: HTTP `GET /api/data`, `POST /api/users`
+- CORS: อนุญาต origin `http://localhost:5173`
+
+## 5) Component Diagram (เบื้องต้น)
+![Components](diagrams/components.png)
+
+ตัวอย่างการแยกส่วน:
+- FE: `App`, `UsersForm`, `UsersList`, `apiClient`
+- BE: `server.js`, `routes/users.js`, `validators/user.schema.js`, `middlewares/`
+
+## 6) API & Validation
+### GET /api/data
+- 200: `{ "message": "This data is open for everyone!" }`
+
+### POST /api/users
+- Request JSON: `{ "username": "...", "password": "...", "birth_year": 2000 }`
+- Validation (Joi):
+  - username: a-zA-Z0-9, 3–30 ตัว
+  - password: a-zA-Z0-9 เท่านั้น, 8–32 ตัว
+  - birth_year: 1900..ปัจจุบัน
+- 201: `{"message":"created","data":{...}}`
+- 400: `{"message":"Invalid data","errors":[...]}`
+- ตัวอย่างผลทดสอบแนบในภาคผนวก
+
+## 7) แผนทดสอบยืนยัน (Postman/Thunder)
+- เคสถูกต้อง 201
+- เคสผิดพลาด 400 (เช่น username สั้น, password มีอักขระพิเศษ, ขาด birth_year)
+
+## ภาคผนวก: ผลทดสอบ
+- แปะสกรีนช็อตหรือ log การเรียก API
